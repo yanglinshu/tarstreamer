@@ -28,7 +28,7 @@ export class ReadablePaddedStream extends ReadableStream {
             return;
           }
 
-          let chunk = new Uint8Array();
+          let chunk = new Uint8Array(chunkSize);
           chunk.set(buffer);
           let offset = buffer.length;
           while (offset < chunkSize) {
@@ -43,10 +43,10 @@ export class ReadablePaddedStream extends ReadableStream {
             }
 
             // Append the new chunk to the buffer
-            const bufferSlice = value.subarray(0, chunkSize - offset);
-            chunk.set(bufferSlice, offset);
-            offset += bufferSlice.length;
-            buffer = value.subarray(bufferSlice.length);
+            const newChunk = value.subarray(0, chunkSize - offset);
+            chunk.set(newChunk, offset);
+            offset += newChunk.length;
+            buffer = value.subarray(newChunk.length);
           }
 
           // Enqueue the remaining chunk

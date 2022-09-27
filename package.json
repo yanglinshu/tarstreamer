@@ -1,5 +1,5 @@
 {
-  "name": "tar-streamer",
+  "name": "tarstreamer",
   "version": "1.0.0",
   "description": "A library to create a tar archive from file streams.",
   "main": "lib/index.js",
@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --config jestconfig.json",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
   },

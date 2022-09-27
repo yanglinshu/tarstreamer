@@ -11,20 +11,18 @@ const MAX_NAME_LENGTH = 100 - 1;
  * @param path - A path seperated by '/'.
  * @returns Prefix and name, null when failed.
  */
-function encodePrefixAndName(path: string): [Uint8Array, Uint8Array] | null {
+export function encodePrefixAndName(path: string): [Uint8Array, Uint8Array] | null {
   const encoder = new TextEncoder();
 
   // Encode each name
   const encodedNames = path.split('/').map((name) => encoder.encode(name));
 
   // Prefix sum of the length of each name
-  const prefixSum = new Array<number>(encodedNames.length).map((value, index, array) => {
-    if (index === 0) {
-      return encodedNames[index].length;
-    } else {
-      return array[index - 1] + encodedNames[index].length;
-    }
-  });
+  const prefixSum = new Array<number>(encodedNames.length).fill(0);
+  prefixSum[0] = encodedNames[0].length;
+  for (let i = 1; i < encodedNames.length; i += 1) {
+    prefixSum[i] = prefixSum[i - 1] + encodedNames[i].length;
+  }
 
   // If there is only one path and it is too long
   if (prefixSum.length === 1 && prefixSum.length > MAX_NAME_LENGTH) {
@@ -34,7 +32,7 @@ function encodePrefixAndName(path: string): [Uint8Array, Uint8Array] | null {
   // If the whole path and its length is not too long
   if (prefixSum[prefixSum.length - 1] + prefixSum.length - 1 <= MAX_NAME_LENGTH) {
     // Use the whole path as name
-    return [new Uint8Array(0), encoder.encode(path)];
+    return [new Uint8Array(), encoder.encode(path)];
   }
 
   for (let i = 1; i < encodedNames.length; i += 1) {
